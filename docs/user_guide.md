@@ -27,6 +27,17 @@ uv run -m avalayers download --bbox -123.1488 49.6315 -123.0692 49.6684
 ```
 *Note: This creates a `data/dems/` directory containing the merged `.tif` files.*
 
+#### 💡 Pro Tip: Custom Input Data & Resolution
+While the `download` command provides convenient global coverage via FABDEM and Copernicus GLO-30 (~30m), **simulation accuracy is significantly enhanced by using higher resolution data** (e.g., 1m to 5m LiDAR).
+
+If you have access to local high-resolution DTM/DSM tiles (e.g., from OpenTopography or government agencies):
+1. Skip the `download` command.
+2. Provide your own `.tif` files directly to the `prepare` command.
+3. Use the `--res` flag during `prepare` to downsample to a balanced resolution (5m is often the "sweet spot" for FlowPy performance vs. accuracy).
+
+> [!IMPORTANT]
+> Ensure your custom rasters are in a projected coordinate system (like UTM) for accurate slope and friction calculations.
+
 ### Step 2: Preparing the Project
 The `prepare` command sets up the directory structure that FlowPy requires.
 
