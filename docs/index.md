@@ -60,4 +60,4 @@ uv run -m avalayers export --project MySimulation --open
 For detailed information on the FSI calculation, friction models, and advanced CLI options, please refer to the [User Guide](user_guide.md).
 
 ## License
-MIT
+GPL-3.0

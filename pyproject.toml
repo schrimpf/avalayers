@@ -3,6 +3,7 @@ name = "avalayers"
 version = "0.1.0"
 description = ""
 readme = "README.md"
+license = "GPL-3.0-only"
 requires-python = ">=3.14"
 dependencies = [
     "avaframe>=1.13",
