@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Paul" /><link rel="canonical" href="https://schrimpf.github.io/avalayers/user_guide/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>User Guide - avalayers</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "User Guide";
+        var mkdocs_page_input_path = "user_guide.md";
+        var mkdocs_page_url = "/avalayers/user_guide/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/yaml.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> avalayers
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">User Guide</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-workflow-overview">1. Workflow Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-step-by-step-tutorial">2. Step-by-Step Tutorial</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-acquire-elevation-data-dtm-dsm">1. Acquire Elevation Data (DTM &amp; DSM)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#pro-tip-custom-input-data-resolution">💡 Pro Tip: Custom Input Data &amp; Resolution</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step-2-preparing-the-project">Step 2: Preparing the Project</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#interactive-release-zone-tuning">Interactive Release Zone Tuning</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#forest-density-fsi">Forest Density (FSI)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step-3-running-the-simulation">Step 3: Running the Simulation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step-4-visualization">Step 4: Visualization</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step-5-google-earth-export">Step 5: Google Earth Export</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-detailed-cli-reference">3. Detailed CLI Reference</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#avalayers-prepare">avalayers prepare</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#avalayers-simulate">avalayers simulate</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-scientific-background-forest-friction">4. Scientific Background: Forest Friction</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API Reference</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">avalayers</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">User Guide</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="avalayers-user-guide">avalayers User Guide</h1>
+<p>This guide provides a comprehensive walkthrough for using the <code>avalayers</code> package to model avalanche flow dynamics with integrated forest friction.</p>
+<h2 id="1-workflow-overview">1. Workflow Overview</h2>
+<p>The <code>avalayers</code> pipeline follows a 5-step process:
+1. <strong>Download</strong>: Acquire DTM (Terrain) and DSM (Surface) tiles.
+2. <strong>Prepare</strong>: Merge tiles, calculate Canopy Height (CHM), and define Release Areas.
+3. <strong>Simulate</strong>: Run the FlowPy engine with custom friction parameters.
+4. <strong>Visualize</strong>: Inspect results in an interactive browser-based dashboard.
+5. <strong>Export</strong>: Generate .kmz file Google Earth and other services.</p>
+<hr />
+<h2 id="2-step-by-step-tutorial">2. Step-by-Step Tutorial</h2>
+<h3 id="1-acquire-elevation-data-dtm-dsm">1. Acquire Elevation Data (DTM &amp; DSM)</h3>
+<p>Start by downloading the bare-earth DTM (FABDEM) and surface DSM (Copernicus) for your region.</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>download
+</code></pre></div>
+or with a pre-defined bounding box:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>download<span class="w"> </span>--bbox<span class="w"> </span>-123.1488<span class="w"> </span><span class="m">49</span>.6315<span class="w"> </span>-123.0692<span class="w"> </span><span class="m">49</span>.6684
+</code></pre></div>
+<em>Note: This creates a <code>data/dems/</code> directory containing the merged <code>.tif</code> files.</em>  The</p>
+<h4 id="pro-tip-custom-input-data-resolution">💡 Pro Tip: Custom Input Data &amp; Resolution</h4>
+<p>While the <code>download</code> command provides convenient global coverage via FABDEM and Copernicus GLO-30 (~30m), <strong>simulation accuracy is significantly enhanced by using higher resolution data</strong> (e.g., 1m to 5m LiDAR).</p>
+<p>If you have access to local high-resolution DTM/DSM tiles (e.g., from OpenTopography or government agencies):
+1. Skip the <code>download</code> command.
+2. Provide your own <code>.tif</code> files directly to the <code>prepare</code> command.
+3. Optional: to reduce computation time, use the <code>--res</code> flag during <code>prepare</code> to downsample to a lower resolution (5m or 10m seem to work well).</p>
+<blockquote>
+<p>[!IMPORTANT]
+Ensure your custom rasters are in a projected coordinate system (like UTM) for accurate slope and friction calculations.</p>
+</blockquote>
+<h3 id="step-2-preparing-the-project">Step 2: Preparing the Project</h3>
+<p>The <code>prepare</code> command sets up the directory structure that FlowPy requires. <em>Note: you will have to change the <code>dtm</code> and <code>dsm</code> filenames to match what you downloaded.</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>prepare<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>--dtm<span class="w"> </span>data/dems/fabdem_dtm_-123.1488_49.6315_-123.0692_49.6684.tif<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--dsm<span class="w"> </span>data/dems/copernicus_glo30_dsm_-123.1488_49.6315_-123.0692_49.6684.tif<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--out<span class="w"> </span>MyProject
+</code></pre></div>
+<h4 id="interactive-release-zone-tuning">Interactive Release Zone Tuning</h4>
+<p>During preparation, <code>avalayers</code> calculates the Slope and Elevation of your terrain. This is used to determine the release zone. The release zone will consists of all cells whose elevation is above a specified altitude, whose slope is in a range, and whose forest coverage is below a specified threshold.<br />
+A map will open in your browser showing the release zone. You can choose to <strong>modify the release zone parameters</strong> directly from the terminal until you are satisfied.</p>
+<h4 id="forest-density-fsi">Forest Density (FSI)</h4>
+<p>The <strong>Forest Structure Information (FSI)</strong> layer is automatically generated by taking <code>DSM - DTM</code> (Canopy Height) and normalizing it. 
+- You can control the normalization threshold with <code>--tree-height-limit</code> (default 30m). 
+- Trees taller than this limit result in an FSI of 1.0 (fully dense).</p>
+<h3 id="step-3-running-the-simulation">Step 3: Running the Simulation</h3>
+<p>The <code>simulate</code> command executes the FlowPy model on your prepared project.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>simulate<span class="w"> </span>--project<span class="w"> </span>MyProject<span class="w"> </span>--max-forest-friction<span class="w"> </span><span class="m">20</span>.0<span class="w"> </span>--overwrite
+</code></pre></div>
+<p><strong>Key Parameters:</strong>
+- <strong><code>--max-forest-friction</code></strong>: The additional friction angle (alpha) added when FSI = 1.0. Increase this if the flow passes through trees too easily.
+- <strong><code>--forest-vel-thresh</code></strong>: The velocity (m/s) below which forest friction is most effective.
+- <strong><code>--overwrite</code></strong>: Forcefully re-run a simulation even if outputs already exist.</p>
+<h3 id="step-4-visualization">Step 4: Visualization</h3>
+<p>Generate a comprehensive dashboard of all simulation results.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>visualize<span class="w"> </span>--project<span class="w"> </span>MyProject<span class="w"> </span>--opacity<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>--browser
+</code></pre></div>
+<p>The dashboard includes:
+- <strong>DTM</strong>: The underlying terrain.
+- <strong>REL</strong>: The release zones you defined.
+- <strong>FSI</strong>: The forest coverage used for friction.
+- <strong>zdelta</strong>: peak flow thickness (Max Depth).
+- <strong>Interactive Toggles</strong>: Turn layers on/off to see how the flow interacts with trees.</p>
+<h3 id="step-5-google-earth-export">Step 5: Google Earth Export</h3>
+<p>For a 3D perspective, export the layers to KMZ.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--project<span class="w"> </span>MyProject<span class="w"> </span>--open
+</code></pre></div>
+<hr />
+<h2 id="3-detailed-cli-reference">3. Detailed CLI Reference</h2>
+<h3 id="avalayers-prepare"><code>avalayers prepare</code></h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--res</code></td>
+<td>native</td>
+<td>Force downsampling to a specific resolution (e.g. 5.0m).</td>
+</tr>
+<tr>
+<td><code>--min-slope</code></td>
+<td>30.0</td>
+<td>Minimum slope angle (deg).</td>
+</tr>
+<tr>
+<td><code>--max-tree-cov</code></td>
+<td>0.1</td>
+<td>Max FSI allowed in a release cell.</td>
+</tr>
+<tr>
+<td><code>--tree-height-limit</code></td>
+<td>30.0</td>
+<td>Max height (m) for FSI normalization.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="avalayers-simulate"><code>avalayers simulate</code></h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--max-forest-friction</code></td>
+<td>10.0</td>
+<td>Added friction in degrees for dense canopy.</td>
+</tr>
+<tr>
+<td><code>--forest-vel-thresh</code></td>
+<td>30.0</td>
+<td>Critical velocity for friction damping.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-scientific-background-forest-friction">4. Scientific Background: Forest Friction</h2>
+<p><code>avalayers</code> implements the <code>ForestFriction</code> module from AvaFrame. See the <a href="https://docs.avaframe.org/en/latest/moduleCom4FlowPy.html#iii-forest-module-parameters">AvaFrame documentation</a>. This module adds a resistive term to the shallow water equations governing the avalanche flow. The resistance is scaled by the <strong>FSI</strong> value of the cell:</p>
+<div class="arithmatex">\[ \text{Friction}_{total} = \text{Coulomb}_{friction} + \text{FSI} \times \text{ForestFriction}_{tuning} \]</div>
+<p>Dense forests (FSI <span class="arithmatex">\(\approx\)</span> 1) significantly increase the "alpha-angle" of the flow, effectively slowing it down or stopping it in sheltered terrain.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api/" class="btn btn-neutral float-right" title="API Reference">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
