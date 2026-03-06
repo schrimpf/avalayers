@@ -55,10 +55,6 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#2-prepare-simulation-project">2. Prepare Simulation Project</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#3-run-simulation">3. Run Simulation</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#4-visualize-results">4. Visualize Results</a>
-    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#scientific-documentation">Scientific Documentation</a>
@@ -100,19 +96,18 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="avalayers">avalayers</h1>
-<p><code>avalayers</code> is a unified, high-performance pipeline for preparing, simulating, and visualizing avalanche flow dynamics using the <strong>FlowPy</strong> (AvaFrame) engine. </p>
-<p>It streamlines the transition from raw satellite data (Copernicus DSM and FABDEM DTM) to complex 3D visualizations, specifically focusing on the interaction between terrain obstacles and forest canopy friction.</p>
+<p><code>avalayers</code> is a user interface for preparing, simulating, and visualizing avalanche flow dynamics using the <a href="https://docs.avaframe.org/en/latest/moduleCom4FlowPy.html"><strong>FlowPy</strong> (AvaFrame) engine</a>. </p>
+<p><img alt="Example Dashboard" src="img/example_dashboard.png" /></p>
 <h2 id="key-features">Key Features</h2>
 <ul>
 <li><strong>Automated Data Processing</strong>: Download and merge high-resolution DTM/DSM tiles across custom bounding boxes.</li>
 <li><strong>Dynamic Terrain Analysis</strong>: Calculate Canopy Height Models (CHM) and normalize them into Forest Structure Information (FSI) layers.</li>
 <li><strong>Interactive Start-Zone Tuning</strong>: Refine avalanche release zones in real-time via a command-line interface and topographical map previews.</li>
-<li><strong>Advanced Forest Friction</strong>: Leverages FlowPy's <code>ForestFriction</code> module with custom configuration for maximum resistance in dense canopies.</li>
-<li><strong>Integrated Dashboard</strong>: Generate interactive, browser-based dashboards with toggleable layers, opacity controls, and scientific descriptions.</li>
-<li><strong>3D Export</strong>: One-click generation of KMZ files for high-fidelity visualization in Google Earth Pro.</li>
+<li><strong>Integrated Dashboard</strong>: Generate interactive, browser-based dashboards with toggleable layers.</li>
+<li><strong>3D Export</strong>: One-click generation of KMZ files for visualization in Google Earth Pro.</li>
 </ul>
 <h2 id="installation">Installation</h2>
-<p>This project uses <code>uv</code> for lightning-fast dependency management.</p>
+<p>This project uses <code>uv</code> for dependency management.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Clone the repository</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>clone<span class="w"> </span>&lt;repo-url&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span><span class="w"> </span>avylayers
@@ -123,26 +118,17 @@
 <h2 id="quick-start">Quick Start</h2>
 <h3 id="1-acquire-elevation-data">1. Acquire Elevation Data</h3>
 <p>Download tiles for your region of interest (e.g., Sky Pilot, BC).
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>scripts/download_dems.py<span class="w"> </span>--bbox<span class="w"> </span>-123.1488<span class="w"> </span><span class="m">49</span>.6315<span class="w"> </span>-123.0692<span class="w"> </span><span class="m">49</span>.6684
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>download<span class="w"> </span>--bbox<span class="w"> </span>-123.1488<span class="w"> </span><span class="m">49</span>.6315<span class="w"> </span>-123.0692<span class="w"> </span><span class="m">49</span>.6684
 </code></pre></div></p>
 <h3 id="2-prepare-simulation-project">2. Prepare Simulation Project</h3>
 <p>Generate the DTM, FSI, and Release Area masks.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>prepare<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>--dtm<span class="w"> </span>data/dems/fabdem_dtm_...tif<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--dsm<span class="w"> </span>data/dems/copernicus_glo30_dsm_...tif<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>--dtm<span class="w"> </span>data/dems/fabdem_dtm_-123.1488_49.6315_-123.0692_49.6684.tif<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--dsm<span class="w"> </span>data/dems/copernicus_glo30_dsm_-123.1488_49.6315_-123.0692_49.6684.tif<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--out<span class="w"> </span>MySimulation
 </code></pre></div></p>
-<h3 id="3-run-simulation">3. Run Simulation</h3>
-<p>Execute the FlowPy engine with custom friction parameters.
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>simulate<span class="w"> </span>--project<span class="w"> </span>MySimulation<span class="w"> </span>--max-forest-friction<span class="w"> </span><span class="m">20</span>.0
-</code></pre></div></p>
-<h3 id="4-visualize-results">4. Visualize Results</h3>
-<p>Open the project dashboard or export to Google Earth.
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>visualize<span class="w"> </span>--project<span class="w"> </span>MySimulation<span class="w"> </span>--browser
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--project<span class="w"> </span>MySimulation<span class="w"> </span>--open
-</code></pre></div></p>
 <h2 id="scientific-documentation">Scientific Documentation</h2>
-<p>For detailed information on the FSI calculation, friction models, and advanced CLI options, please refer to the <a href="user_guide/">User Guide</a>.</p>
+<p>For detailed more information on options and usage, please refer to the <a href="user_guide/">User Guide</a>.</p>
 <h2 id="license">License</h2>
 <p>GPL-3.0</p>
               
@@ -195,5 +181,5 @@
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-03-06 23:08:04.828147+00:00
+Build Date UTC : 2026-03-06 23:18:14.791604+00:00
 -->
