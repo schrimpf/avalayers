@@ -6,7 +6,7 @@
 
 ## Key Features
 
-- **Automated Data Processing**: Download and merge high-resolution DTM/DSM tiles across custom bounding boxes.
+- **Automated Data Processing**: Download and merge 30m resolution DTM/DSM tiles across custom bounding boxes.
 - **Dynamic Terrain Analysis**: Calculate Canopy Height Models (CHM) and normalize them into Forest Structure Information (FSI) layers.
 - **Interactive Start-Zone Tuning**: Refine avalanche release zones in real-time via a command-line interface and topographical map previews.
 - **Integrated Dashboard**: Generate interactive, browser-based dashboards with toggleable layers.
