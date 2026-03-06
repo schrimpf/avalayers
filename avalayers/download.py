@@ -139,6 +139,19 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             threading.Thread(target=self.server.shutdown).start()
 
 def get_bounding_box(prefill_bbox=None):
+    """Open a browser-based Leaflet map to select a geographic bounding box.
+
+    This function starts a temporary local HTTP server on port 8080 to serve 
+    an interactive map. Once the user selects a box and clicks "Download",
+     the coordinates are sent back to Python via a POST request.
+
+    Args:
+        prefill_bbox (dict, optional): Initial coordinates to show on the map.
+            Should contain 'minx', 'miny', 'maxx', 'maxy'.
+
+    Returns:
+        dict: The selected bounding box coordinates.
+    """
     server = socketserver.TCPServer(("", PORT), RequestHandler)
     if prefill_bbox:
         url = f"http://localhost:{PORT}/?minx={prefill_bbox['minx']}&miny={prefill_bbox['miny']}&maxx={prefill_bbox['maxx']}&maxy={prefill_bbox['maxy']}"
@@ -170,6 +183,14 @@ def format_bbox_str(bbox):
     return f"{bbox['minx']:.4f}_{bbox['miny']:.4f}_{bbox['maxx']:.4f}_{bbox['maxy']:.4f}"
 
 def download_copernicus_dem(bbox, output_dir):
+    """Download and mosaic Copernicus GLO-30 DSM tiles for a bounding box.
+
+    Uses the Microsoft Planetary Computer STAC API to find and download tiles.
+
+    Args:
+        bbox (dict): Bounding box coordinates (minx, miny, maxx, maxy).
+        output_dir (str): Directory to save the final mosaicked GeoTIFF.
+    """
     bbox_str = format_bbox_str(bbox)
     out_path = os.path.join(output_dir, f'copernicus_glo30_dsm_{bbox_str}.tif')
     if os.path.exists(out_path):
@@ -216,6 +237,15 @@ def download_copernicus_dem(bbox, output_dir):
     print(f"Copernicus DEM saved to {out_path}")
 
 def download_cdem(bbox, output_dir):
+    """Stub for Canadian Digital Elevation Model (CDEM) download.
+
+    Currently prints instructions for manual download as CDEM endpoints 
+    can be unstable for direct scripting.
+
+    Args:
+        bbox (dict): Bounding box coordinates.
+        output_dir (str): Output directory.
+    """
     # CDEM download is tricky without a direct WCS endpoint that supports arbitrary bboxes easily
     # It usually requires hitting the WMS or NRCAN extraction tool. Here we will leave a stub
     # and instructions, or try a generic WCS if it exists.
@@ -224,6 +254,15 @@ def download_cdem(bbox, output_dir):
     print("or use the Copernicus/FABDEM which are more easily scriptable.")
 
 def download_fabdem(bbox, output_dir):
+    """Download and mosaic FABDEM (bare-earth DTM) tiles.
+
+    FABDEM is a processed version of Copernicus GLO-30 with trees and 
+    buildings removed.
+
+    Args:
+        bbox (dict): Bounding box coordinates.
+        output_dir (str): Output directory.
+    """
     bbox_str = format_bbox_str(bbox)
     fabdem_out = os.path.join(output_dir, f'fabdem_dtm_{bbox_str}.tif')
     if os.path.exists(fabdem_out):
@@ -310,12 +349,14 @@ def download_fabdem(bbox, output_dir):
 
 import argparse
 
-def main():
-    parser = argparse.ArgumentParser(description="Download DEMs for a selected bounding box.")
-    parser.add_argument('--bbox', nargs=4, type=float, metavar=('MINX', 'MINY', 'MAXX', 'MAXY'),
-                        help='Bounding box in the format: minx miny maxx maxy')
-    args = parser.parse_args()
+def download_cmd(args):
+    """CLI command entry point for downloading DEMs.
 
+    Args:
+        args (argparse.Namespace): Arguments containing:
+            bbox: Optional list of 4 floats (minx, miny, maxx, maxy).
+            out: Optional output directory for DEMs.
+    """
     if args.bbox:
         bbox = {
             'minx': args.bbox[0],
@@ -324,7 +365,6 @@ def main():
             'maxy': args.bbox[3]
         }
         print(f"Using provided Bounding Box: {bbox}")
-        # Call the server with the prepopulated bbox so it shows up in the browser
         bbox = get_bounding_box(bbox)
     else:
         bbox = get_bounding_box()
@@ -335,7 +375,7 @@ def main():
         
     print(f"Selected Bounding Box: {bbox}")
     
-    output_dir = os.path.join(os.getcwd(), 'data', 'dems')
+    output_dir = args.out if getattr(args, 'out', None) else os.path.join(os.getcwd(), 'data', 'dems')
     os.makedirs(output_dir, exist_ok=True)
     
     download_copernicus_dem(bbox, output_dir)
@@ -343,7 +383,4 @@ def main():
     download_fabdem(bbox, output_dir)
     
     print("Processing complete!")
-
-if __name__ == "__main__":
-    main()
  

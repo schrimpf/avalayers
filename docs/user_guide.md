@@ -15,11 +15,15 @@ The `avalayers` pipeline follows a 5-step process:
 
 ## 2. Step-by-Step Tutorial
 
-### Step 1: Downloading Elevation Data
-The `scripts/download_dems.py` tool fetches **FABDEM** (bare earth) and **Copernicus GLO-30** (surface) rasters from the Planetary Computer.
+### 1. Acquire Elevation Data (DTM & DSM)
+Start by downloading the bare-earth DTM (FABDEM) and surface DSM (Copernicus) for your region.
 
 ```bash
-uv run scripts/download_dems.py --bbox -123.1488 49.6315 -123.0692 49.6684
+uv run -m avalayers download
+```
+or with a pre-defined bounding box:
+```bash
+uv run -m avalayers download --bbox -123.1488 49.6315 -123.0692 49.6684
 ```
 *Note: This creates a `data/dems/` directory containing the merged `.tif` files.*
 

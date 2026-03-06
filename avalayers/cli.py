@@ -4,6 +4,7 @@ import sys
 from .prepare import prepare_cmd
 from .visualize import visualize_cmd
 from .simulate import simulate_cmd
+from .download import download_cmd
 
 def main():
     """Main entry point for the avalayers CLI.
@@ -30,6 +31,12 @@ def main():
     parser_prep.add_argument("--res", type=float, default=None, help="Optional target resolution in meters to downsample to (e.g. 5.0). Defaults to native resolution if omitted.")
     parser_prep.add_argument("--tree-height-limit", type=float, default=30.0, help="Tree height at which forest is considered fully dense (FSI=1.0). Default 30.0m.")
     parser_prep.set_defaults(func=prepare_cmd)
+
+    # Download command
+    parser_down = subparsers.add_parser("download", help="Download DEMs for a selected bounding box via an interactive map")
+    parser_down.add_argument("--bbox", nargs=4, type=float, metavar=("MINX", "MINY", "MAXX", "MAXY"), help="Optional bounding box: minx miny maxx maxy")
+    parser_down.add_argument("--out", help="Directory to save downloaded DEMs. Defaults to ./data/dems")
+    parser_down.set_defaults(func=download_cmd)
 
     # Visualize command
     parser_vis = subparsers.add_parser("visualize", help="Quickly visualize raster layers and optional overlays")

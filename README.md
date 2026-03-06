@@ -29,10 +29,10 @@ uv sync
 ## Quick Start
 
 ### 1. Acquire Elevation Data
-Download tiles for your region of interest (e.g., Sky Pilot, BC).
-```bash
-uv run scripts/download_dems.py --bbox -123.1488 49.6315 -123.0692 49.6684
-```
+1.  **Download DEMs**: Use the integrated download tool to grab FABDEM (DTM) and Copernicus (DSM) tiles.
+    ```bash
+    uv run -m avalayers download --bbox -123.1488 49.6315 -123.0692 49.6684
+    ```
 
 ### 2. Prepare Simulation Project
 Generate the DTM, FSI, and Release Area masks.
