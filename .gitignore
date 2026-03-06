@@ -1,0 +1,32 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Data and simulation projects
+data/
+raw_data/
+subset_data/
+SkyPilot*/
+outputs/
+
+# Raster/GIS related
+*.tif
+*.asc
+*.png
+*.kmz
+*.aux.xml
+*.qgz
+
+# Documentation build
+site/
+
+# Backup/Temp
+*~
+*.bak
