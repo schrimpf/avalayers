@@ -1,4 +1,5 @@
 site_name: avalayers
+site_url: https://schrimpf.github.io/avalayers/
 site_description: A unified pipeline for FlowPy avalanche simulations
 site_author: Paul
 
