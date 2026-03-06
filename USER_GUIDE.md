@@ -33,7 +33,7 @@ While the `download` command provides convenient global coverage via FABDEM and 
 If you have access to local high-resolution DTM/DSM tiles (e.g., from OpenTopography or government agencies):
 1. Skip the `download` command.
 2. Provide your own `.tif` files directly to the `prepare` command.
-3. Use the `--res` flag during `prepare` to downsample to a balanced resolution (5m is often the "sweet spot" for FlowPy performance vs. accuracy).
+3. Use the `--res` flag during `prepare` to downsample to a balanced resolution (e.g. 5m or 10m).
 
 > [!IMPORTANT]
 > Ensure your custom rasters are in a projected coordinate system (like UTM) for accurate slope and friction calculations.
@@ -43,8 +43,8 @@ The `prepare` command sets up the directory structure that FlowPy requires.
 
 ```bash
 uv run -m avalayers prepare \
-    --dtm data/dems/fabdem_dtm_...tif \
-    --dsm data/dems/copernicus_glo30_dsm_...tif \
+    --dtm data/dems/fabdem_dtm_-123.1488_49.6315_-123.0692_49.6684.tif \
+    --dsm data/dems/copernicus_glo30_dsm_-123.1488_49.6315_-123.0692_49.6684.tif \
     --out MyProject
 ```
 

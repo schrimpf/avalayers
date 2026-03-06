@@ -9,7 +9,7 @@ The `avalayers` pipeline follows a 5-step process:
 2. **Prepare**: Merge tiles, calculate Canopy Height (CHM), and define Release Areas.
 3. **Simulate**: Run the FlowPy engine with custom friction parameters.
 4. **Visualize**: Inspect results in an interactive browser-based dashboard.
-5. **Export**: Generate 3D assets for Google Earth Pro.
+5. **Export**: Generate .kmz file Google Earth and other services.
 
 ---
 
@@ -25,7 +25,7 @@ or with a pre-defined bounding box:
 ```bash
 uv run -m avalayers download --bbox -123.1488 49.6315 -123.0692 49.6684
 ```
-*Note: This creates a `data/dems/` directory containing the merged `.tif` files.*
+*Note: This creates a `data/dems/` directory containing the merged `.tif` files.*  The
 
 #### 💡 Pro Tip: Custom Input Data & Resolution
 While the `download` command provides convenient global coverage via FABDEM and Copernicus GLO-30 (~30m), **simulation accuracy is significantly enhanced by using higher resolution data** (e.g., 1m to 5m LiDAR).
@@ -43,8 +43,8 @@ The `prepare` command sets up the directory structure that FlowPy requires.
 
 ```bash
 uv run -m avalayers prepare \
-    --dtm data/dems/fabdem_dtm_...tif \
-    --dsm data/dems/copernicus_glo30_dsm_...tif \
+    --dtm data/dems/fabdem_dtm_-123.1488_49.6315_-123.0692_49.6684.tif \
+    --dsm data/dems/copernicus_glo30_dsm_-123.1488_49.6315_-123.0692_49.6684.tif \
     --out MyProject
 ```
 
