@@ -20,6 +20,8 @@ outputs/
 *.tif
 *.asc
 *.png
+!docs/img/*.png
+!docs/img/example_dashboard.png
 *.kmz
 *.aux.xml
 *.qgz
@@ -30,3 +32,4 @@ site/
 # Backup/Temp
 *~
 *.bak
+r
