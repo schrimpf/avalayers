@@ -48,8 +48,8 @@ HTML_PAGE = """
         var readonly = !isNaN(minx) && !isNaN(miny) && !isNaN(maxx) && !isNaN(maxy);
 
         var map = L.map('map');
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
+        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
         }).addTo(map);
 
         var drawnItems = new L.FeatureGroup();
