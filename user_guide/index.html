@@ -133,7 +133,7 @@
 or with a pre-defined bounding box:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>avalayers<span class="w"> </span>download<span class="w"> </span>--bbox<span class="w"> </span>-123.1488<span class="w"> </span><span class="m">49</span>.6315<span class="w"> </span>-123.0692<span class="w"> </span><span class="m">49</span>.6684
 </code></pre></div>
-<em>Note: This creates a <code>data/dems/</code> directory containing the merged <code>.tif</code> files.</em>  The</p>
+<em>Note: This creates a <code>data/dems/</code> directory containing the merged <code>.tif</code> files.</em>  The FABDEM data files cover a large area and take some time to download. They will be saved and re-used. </p>
 <h4 id="pro-tip-custom-input-data-resolution">💡 Pro Tip: Custom Input Data &amp; Resolution</h4>
 <p>While the <code>download</code> command provides convenient global coverage via FABDEM and Copernicus GLO-30 (~30m), <strong>simulation accuracy is significantly enhanced by using higher resolution data</strong> (e.g., 1m to 5m LiDAR).</p>
 <p>If you have access to local high-resolution DTM/DSM tiles (e.g., from OpenTopography or government agencies):
@@ -238,7 +238,7 @@ A map will open in your browser showing the release zone. You can choose to <str
 </table>
 <hr />
 <h2 id="4-scientific-background-forest-friction">4. Scientific Background: Forest Friction</h2>
-<p><code>avalayers</code> implements the <code>ForestFriction</code> module from AvaFrame. See the <a href="https://docs.avaframe.org/en/latest/moduleCom4FlowPy.html#iii-forest-module-parameters">AvaFrame documentation</a>. This module adds a resistive term to the shallow water equations governing the avalanche flow. The resistance is scaled by the <strong>FSI</strong> value of the cell:</p>
+<p><code>avalayers</code> uses the <code>ForestFriction</code> module from AvaFrame. See the <a href="https://docs.avaframe.org/en/latest/moduleCom4FlowPy.html#iii-forest-module-parameters">AvaFrame documentation</a>. This module adds a resistive term to the shallow water equations governing the avalanche flow. The resistance is scaled by the <strong>FSI</strong> value of the cell:</p>
 <div class="arithmatex">\[ \text{Friction}_{total} = \text{Coulomb}_{friction} + \text{FSI} \times \text{ForestFriction}_{tuning} \]</div>
 <p>Dense forests (FSI <span class="arithmatex">\(\approx\)</span> 1) significantly increase the "alpha-angle" of the flow, effectively slowing it down or stopping it in sheltered terrain.</p>
               
