@@ -25,6 +25,11 @@ LAYER_INFO = {
         'cmap': 'Greens',
         'desc': 'Forest Structure Information: Normalized tree height (0 to 1) used to calculate friction.'
     },
+    'slope': {
+        'name': 'Slope Angle',
+        'cmap': 'viridis',
+        'desc': 'Terrain Slope: Calculated in degrees from the DTM. Steeper slopes (>30°) are more prone to avalanches.'
+    },
     'zdelta': {
         'name': 'Max Flow Thickness (zdelta)',
         'cmap': 'plasma',
@@ -32,13 +37,18 @@ LAYER_INFO = {
     },
     'fptravelanglemax': {
         'name': 'Friction Alpha Angle',
-        'cmap': 'YlOrBr',
+        'cmap': 'hot_r',
         'desc': 'Simulation Output: The maximum travel angle (friction) reached during the flow.'
     },
     'travellengthmax': {
         'name': 'Max Travel Length',
-        'cmap': 'Purples',
+        'cmap': 'viridis',
         'desc': 'Simulation Output: The maximum distance traveled by the flow at this point.'
+    },
+    'slope': {
+        'name': 'Slope Angle',
+        'cmap': 'hot_r',
+        'desc': 'Terrain Slope: Calculated in degrees from the DTM. Displaying steepness from 25° to 60°.'
     },
     'cellcounts': {
         'name': 'Cell Counts',
@@ -110,6 +120,7 @@ def generate_interactive_map(project_dir):
     dem_path = os.path.join(project_dir, 'Inputs', 'dem.asc')
     rel_path = os.path.join(project_dir, 'Inputs', 'REL', 'rel.tif')
     fsi_path = os.path.join(project_dir, 'Inputs', 'RES', 'fsi.tif')
+    slope_path = os.path.join(project_dir, 'Inputs', 'RES', 'slope.tif')
     
     # We must determine bounds and center from the DEM
     with rasterio.open(dem_path) as src:
@@ -184,6 +195,26 @@ def generate_interactive_map(project_dir):
                 zindex=3
             ).add_to(m)
 
+    # 4. Slope Angle - Viridis colormap
+    if os.path.exists(slope_path):
+        with rasterio.open(slope_path) as slope_src:
+            slope_data = slope_src.read(1, out_shape=out_shape)
+            slope_nodata = slope_src.nodata if slope_src.nodata is not None else 0.0
+            
+            # Mask out 0 slope to keep background clean, and filter to > 25 deg per user request
+            slope_data[slope_data < 25.0] = slope_nodata
+            
+            slope_b64 = generate_rgba_for_raster(slope_data, slope_nodata, 'hot_r', alpha_val=0.6, vmin=25, vmax=60)
+            folium.raster_layers.ImageOverlay(
+                image=slope_b64,
+                bounds=[[bounds[1], bounds[0]], [bounds[3], bounds[2]]],
+                name='Slope Angle',
+                interactive=True,
+                cross_origin=False,
+                zindex=4,
+                show=False
+            ).add_to(m)
+
     folium.LayerControl().add_to(m)
     
     map_path = os.path.join(project_dir, 'interactive_preview.html')
@@ -252,7 +283,8 @@ def generate_project_dashboard(project_dir, opacity=0.7):
     # 2. Add other inputs
     inputs = {
         'rel': os.path.join(project_dir, 'Inputs', 'REL', 'rel.tif'),
-        'fsi': os.path.join(project_dir, 'Inputs', 'RES', 'fsi.tif')
+        'fsi': os.path.join(project_dir, 'Inputs', 'RES', 'fsi.tif'),
+        'slope': os.path.join(project_dir, 'Inputs', 'RES', 'slope.tif')
     }
     
     for key, path in inputs.items():
@@ -260,16 +292,22 @@ def generate_project_dashboard(project_dir, opacity=0.7):
             with rasterio.open(path) as s:
                 data = s.read(1, out_shape=out_shape)
                 nd = s.nodata if s.nodata is not None else (-9999.0 if key == 'fsi' else 0.0)
-                if key == 'fsi': data[data <= 0] = nd
+                if key in ['fsi', 'slope']: data[data <= 0] = nd
                 else: data[data <= 0] = nd
                 
-                b64 = generate_rgba_for_raster(data, nd, LAYER_INFO[key]['cmap'], alpha_val=opacity, vmin=0, vmax=1)
+                b64 = None
+                if key == 'slope':
+                    data[data < 25.0] = nd
+                    b64 = generate_rgba_for_raster(data, nd, LAYER_INFO[key]['cmap'], alpha_val=opacity, vmin=25, vmax=60)
+                else:
+                    b64 = generate_rgba_for_raster(data, nd, LAYER_INFO[key]['cmap'], alpha_val=opacity, vmin=0, vmax=1)
+                
                 folium.raster_layers.ImageOverlay(
                     image=b64,
                     bounds=[[bounds[1], bounds[0]], [bounds[3], bounds[2]]],
                     name=LAYER_INFO[key]['name'],
                     interactive=True,
-                    zindex=2 if key == 'rel' else 3,
+                    zindex=2 if key == 'rel' else (3 if key == 'fsi' else 4),
                     show=False,
                     popup=LAYER_INFO[key]['desc']
                 ).add_to(m)
@@ -297,7 +335,17 @@ def generate_project_dashboard(project_dir, opacity=0.7):
                     
                     show_layer = (info_key == 'zdelta')
                     
-                    b64 = generate_rgba_for_raster(data, nd, cmap, alpha_val=opacity)
+                    vmin, vmax = None, None
+                    if info_key == 'fptravelanglemax':
+                        # Alpha angle usually ranges 20-40, let's clamp for contrast
+                        data[data < 20] = nd
+                        vmin, vmax = 20, 45
+                    elif info_key == 'travellengthmax':
+                        # Normalise travel length to avoid outliers washing out the scale
+                        data[data <= 0] = nd
+                        vmax = np.nanpercentile(data[data != nd], 98) if np.any(data != nd) else None
+                    
+                    b64 = generate_rgba_for_raster(data, nd, cmap, alpha_val=opacity, vmin=vmin, vmax=vmax)
                     folium.raster_layers.ImageOverlay(
                         image=b64,
                         bounds=[[bounds[1], bounds[0]], [bounds[3], bounds[2]]],
@@ -373,6 +421,8 @@ def visualize_cmd(args):
                 ol_desc = "Release Area"
             elif "fsi" in ol_name:
                 ol_desc = "Forest Structure Information (Tree Coverage)"
+            elif "slope" in ol_name:
+                ol_desc = "Slope Angle"
                 
             print(f" > Overlaid with: {ol_desc} (from {overlay_path})")
 
@@ -412,8 +462,14 @@ def visualize_cmd(args):
                     ol_nodata = src_ol.nodata if src_ol.nodata is not None else -9999.0
                     
                     ol_data[ol_data <= 0] = ol_nodata
-                    cmap = 'Greens' if "fsi" in ol_name else 'Reds_r'
-                    ol_b64 = generate_rgba_for_raster(ol_data, ol_nodata, cmap, alpha_val=0.8)
+                    cmap = 'Greens' if "fsi" in ol_name else ('hot_r' if "slope" in ol_name else 'Reds_r')
+                    
+                    vmin, vmax = None, None
+                    if "slope" in ol_name:
+                        ol_data[ol_data < 25] = ol_nodata
+                        vmin, vmax = 25, 60
+                        
+                    ol_b64 = generate_rgba_for_raster(ol_data, ol_nodata, cmap, alpha_val=0.8, vmin=vmin, vmax=vmax)
                     
                     folium.raster_layers.ImageOverlay(
                         image=ol_b64,
@@ -458,7 +514,7 @@ def visualize_cmd(args):
                         ol_layer = np.where(ol_layer == ol_nodata, np.nan, ol_layer)
                     ol_layer = np.where(ol_layer <= 0, np.nan, ol_layer)
                     
-                    cmap = 'Greens' if "fsi" in ol_name else 'Reds_r'
+                    cmap = 'Greens' if "fsi" in ol_name else ('viridis' if "slope" in ol_name else 'Reds_r')
                     ol_img = plt.imshow(ol_layer, extent=extent, cmap=cmap, alpha=0.5)
                     plt.colorbar(ol_img, label=ol_desc)
                     

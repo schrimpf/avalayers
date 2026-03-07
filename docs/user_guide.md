@@ -25,7 +25,7 @@ or with a pre-defined bounding box:
 ```bash
 uv run -m avalayers download --bbox -123.1488 49.6315 -123.0692 49.6684
 ```
-*Note: This creates a `data/dems/` directory containing the merged `.tif` files.*  The
+*Note: This creates a `data/dems/` directory containing the merged `.tif` files.*  The FABDEM data files cover a large area and take some time to download. They will be saved and re-used. 
 
 #### 💡 Pro Tip: Custom Input Data & Resolution
 While the `download` command provides convenient global coverage via FABDEM and Copernicus GLO-30 (~30m), **simulation accuracy is significantly enhanced by using higher resolution data** (e.g., 1m to 5m LiDAR).
@@ -111,7 +111,7 @@ uv run -m avalayers export --project MyProject --open
 ---
 
 ## 4. Scientific Background: Forest Friction
-`avalayers` implements the `ForestFriction` module from AvaFrame. See the [AvaFrame documentation](https://docs.avaframe.org/en/latest/moduleCom4FlowPy.html#iii-forest-module-parameters). This module adds a resistive term to the shallow water equations governing the avalanche flow. The resistance is scaled by the **FSI** value of the cell:
+`avalayers` uses the `ForestFriction` module from AvaFrame. See the [AvaFrame documentation](https://docs.avaframe.org/en/latest/moduleCom4FlowPy.html#iii-forest-module-parameters). This module adds a resistive term to the shallow water equations governing the avalanche flow. The resistance is scaled by the **FSI** value of the cell:
 
 $$ \text{Friction}_{total} = \text{Coulomb}_{friction} + \text{FSI} \times \text{ForestFriction}_{tuning} $$
 

@@ -203,6 +203,12 @@ def prepare_cmd(args):
         fsi_meta.update(dtype='float32', nodata=-9999.0)
         with rasterio.open(fsi_out_path, 'w', **fsi_meta) as dst:
             dst.write(fsi_data.astype('float32'), 1)
+
+        slope_out_path = os.path.join(res_dir, 'slope.tif')
+        slope_meta = meta.copy()
+        slope_meta.update(dtype='float32', nodata=0.0)
+        with rasterio.open(slope_out_path, 'w', **slope_meta) as dst:
+            dst.write(slope_data.astype('float32'), 1)
             
         try:
             generate_interactive_map(output_dir)

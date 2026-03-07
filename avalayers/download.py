@@ -236,22 +236,6 @@ def download_copernicus_dem(bbox, output_dir):
     
     print(f"Copernicus DEM saved to {out_path}")
 
-def download_cdem(bbox, output_dir):
-    """Stub for Canadian Digital Elevation Model (CDEM) download.
-
-    Currently prints instructions for manual download as CDEM endpoints 
-    can be unstable for direct scripting.
-
-    Args:
-        bbox (dict): Bounding box coordinates.
-        output_dir (str): Output directory.
-    """
-    # CDEM download is tricky without a direct WCS endpoint that supports arbitrary bboxes easily
-    # It usually requires hitting the WMS or NRCAN extraction tool. Here we will leave a stub
-    # and instructions, or try a generic WCS if it exists.
-    print("Note: CDEM automatic download requires WCS/WFS endpoints which frequently change.")
-    print("For CDEM, it's recommended to download the tiles manually from open.canada.ca")
-    print("or use the Copernicus/FABDEM which are more easily scriptable.")
 
 def download_fabdem(bbox, output_dir):
     """Download and mosaic FABDEM (bare-earth DTM) tiles.
@@ -276,6 +260,7 @@ def download_fabdem(bbox, output_dir):
         from shapely.geometry import box
         from geopandas import GeoDataFrame
         import requests
+        from tqdm import tqdm
         from zipfile import ZipFile
         from pathlib import Path
         
@@ -299,12 +284,20 @@ def download_fabdem(bbox, output_dir):
         for zipfile_name in set(intersecting_tiles.zipfile_name):
             zip_path = Path(cache_dir) / zipfile_name
             if not zip_path.exists():
-                print(f"Downloading {zipfile_name} from {base_url}... this may take a while (1GB+)")
+                print(f"Downloading {zipfile_name} from {base_url}...")
                 resp = requests.get(f"{base_url}/{zipfile_name}", stream=True)
                 resp.raise_for_status()
-                with open(zip_path, "wb") as f:
+                total_size = int(resp.headers.get('content-length', 0))
+                with open(zip_path, "wb") as f, tqdm(
+                    desc=zipfile_name,
+                    total=total_size,
+                    unit='iB',
+                    unit_scale=True,
+                    unit_divisor=1024,
+                ) as bar:
                     for chunk in resp.iter_content(chunk_size=8192):
-                        f.write(chunk)
+                        size = f.write(chunk)
+                        bar.update(size)
             else:
                 print(f"{zip_path} loaded from cache")
                 
@@ -379,7 +372,6 @@ def download_cmd(args):
     os.makedirs(output_dir, exist_ok=True)
     
     download_copernicus_dem(bbox, output_dir)
-    download_cdem(bbox, output_dir)
     download_fabdem(bbox, output_dir)
     
     print("Processing complete!")
